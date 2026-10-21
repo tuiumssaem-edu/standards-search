@@ -464,7 +464,8 @@ function render(){
   const left=std.length-n;
   $('btnMore').hidden=left<=0;$('btnMore').textContent=`교과 더 보기 (${list.length-shownGroups}개 교과, ${left}건)`;
 }
-function run(){
+function run(reset=true){
+  if(reset&&st.basket.size){st.basket.clear();saveBasket();updateBasket();}
   st.q=$('q').value.trim();st.shown=40;setNotice('');
   if(st.q)runSearch();else{st.std=[];st.dai=[];}
   applyFilters();render();
@@ -497,8 +498,10 @@ function basketText(){
   const stdIds=ids.filter(i=>i[0]==='s').map(i=>+i.slice(1)).sort((a,b)=>a-b);
   const dIds=ids.filter(i=>i[0]==='d').map(i=>+i.slice(1)).sort((a,b)=>a-b);
   let t='';
-  for(const i of stdIds){const x=STD[i];t+=`${x.c} ${x.t}\n   (${x.s} / ${x.g} / ${K_FULL[x.k]}, 별책 ${x.b} 문서 p.${x.p})\n`;}
-  for(const i of dIds){const x=DAILY[i];t+=`[일상생활 활동] ${x.a} › ${x.e}: ${x.t}\n   (기본 교육과정 별책 3, 일상생활 활동 영역별 내용 요소 체계)\n`;}
+  for(const i of stdIds){const x=STD[i];t+=`${x.c} ${x.t}
+`;}
+  for(const i of dIds){const x=DAILY[i];t+=`[일상생활 활동] ${x.a} › ${x.e}: ${x.t}
+`;}
   if(t)t+='\n출처: 교육부 고시 제2022-34호(2022. 12. 22.) 2022 개정 특수교육 교육과정\n';
   return t;
 }
@@ -519,7 +522,7 @@ function setNotice(t){const n=$('notice');n.textContent=t;n.hidden=!t;}
 const c=DATA.meta.counts;
 $('meta').textContent=`수록: 기본 교육과정 ${c['기본']}건, 공통 교육과정 ${c['공통']}건, 선택 중심 교육과정 ${c['선택']}건, 일상생활 활동 ${c['일상생활활동']}건.`;
 $('q').value='시장에서 물건 사기';
-run();updateBasket();
+run(false);updateBasket();
 })();
 </script>
 
